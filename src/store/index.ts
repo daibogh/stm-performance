@@ -1,9 +1,11 @@
 import listReducer from './slices/listSlice';
+import socketReducer from './slices/socketSlice';
 import {configureStore} from '@reduxjs/toolkit';
 
 const store = configureStore({
   reducer: {
     list: listReducer,
+    socket: socketReducer,
   },
 });
 export default store;
