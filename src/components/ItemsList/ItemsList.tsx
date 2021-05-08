@@ -1,13 +1,12 @@
 import {FC, useCallback, useLayoutEffect, useMemo} from 'react';
-import {useAppDispatch, useAppSelector} from '../hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {Socket} from 'socket.io-client';
-import {setList, updateList} from '../store/slices/listSlice';
-import {useSocketConnection} from '../hooks/useSocketConnection';
-import {stopSocket, startSocket} from '../store/slices/socketSlice';
-
+import {setList, updateList} from '../../store/slices/listSlice';
+import {useSocketConnection} from '../../hooks/useSocketConnection';
+import {stopSocket, startSocket} from '../../store/slices/socketSlice';
+import {SocketButton} from '../SocketButton';
 const ItemsList: FC = () => {
   const items = useAppSelector(store => store.list.value);
-  const isActive = useAppSelector(store => store.socket.isActiveConnection);
   const dispatch = useAppDispatch();
   const onOpenSocket = useCallback((socket: Socket) => {
     socket.emit('list:get');
@@ -64,22 +63,7 @@ const ItemsList: FC = () => {
           />
         ))}
       </ul>
-      <button
-        disabled={isActive}
-        style={{background: isActive ? void 0 : 'green', color: 'white'}}
-        type="button"
-        onClick={() => dispatch(startSocket())}
-      >
-        start
-      </button>
-      <button
-        disabled={!isActive}
-        style={{background: !isActive ? void 0 : 'red', color: 'white'}}
-        type="button"
-        onClick={() => dispatch(stopSocket())}
-      >
-        stop
-      </button>
+      <SocketButton />
     </div>
   );
 };
