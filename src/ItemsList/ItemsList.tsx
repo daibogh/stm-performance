@@ -17,16 +17,29 @@ const ItemsList: FC = () => {
     if (isActive) {
       socketRef.current = io('http://localhost:5000');
       socketRef.current.on('list:value', value => {
-        dispatch(setList(value as number[]));
+        dispatch(
+          setList(
+            value.map((item: number) => ({
+              backgroundColor: `rgb(${Math.floor(
+                Math.random() * 255,
+              )},${Math.floor(Math.random() * 255)},${Math.floor(
+                Math.random() * 255,
+              )})`,
+              width: item,
+            })),
+          ),
+        );
       });
       socketRef.current.on('list:update', value => {
-        dispatch(updateList(value as [number, number]));
+        dispatch(updateList(value as [number]));
         performance.mark('list:update--start');
       });
       socketRef.current.emit('list:get');
-    } else if (!!socketRef.current) {
-      socketRef.current.disconnect();
-      // console.log(performance.getEntriesByName('list:update'));
+    } else {
+      if (!!socketRef.current) {
+        socketRef.current.disconnect();
+        // console.log(performance.getEntriesByName('list:update'));
+      }
     }
     return () => {
       socketRef.current?.disconnect();
@@ -40,6 +53,9 @@ const ItemsList: FC = () => {
         'list:update--start',
         'list:update--end',
       );
+      if (items.every(elem => elem.width >= 100)) {
+        dispatch(stopFetching());
+      }
     } catch (e) {
       console.log(e);
     }
@@ -48,7 +64,13 @@ const ItemsList: FC = () => {
     <div>
       <ul>
         {items.map((item, idx) => (
-          <li key={idx}>{item}</li>
+          <li
+            key={idx}
+            style={{
+              background: item.backgroundColor,
+              width: item.width,
+            }}
+          />
         ))}
       </ul>
       <button
