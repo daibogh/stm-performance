@@ -63,7 +63,6 @@ const ItemsList: FC = () => {
           />
         ))}
       </ul>
-      <SocketButton />
     </div>
   );
 };

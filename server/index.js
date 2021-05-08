@@ -12,6 +12,7 @@ const log = console.log;
 
 // получаем обработчики событий
 const regisgterListHanlder = require('./handlers/list-handler');
+const regisgterMatrixHanlder = require('./handlers/matrix-handler');
 
 // данная функция выполняется при подключении каждого сокета (обычно, один клиент = один сокет)
 const onConnection = socket => {
@@ -23,6 +24,7 @@ const onConnection = socket => {
   // регистрируем обработчики
   // обратите внимание на передаваемые аргументы
   regisgterListHanlder(io, socket);
+  regisgterMatrixHanlder(io, socket);
 };
 
 // обрабатываем подключение
