@@ -1,5 +1,5 @@
 const timers = {};
-const length = 100;
+const length = 400;
 const genColor = () =>
   `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
     Math.random() * 255,
