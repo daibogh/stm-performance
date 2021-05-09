@@ -1,14 +1,17 @@
-import {FC, useCallback, useMemo, useState} from 'react';
+import {FC, useCallback, useContext, useMemo, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {Socket} from 'socket.io-client';
 import {setList, updateList} from '../../store/slices/listSlice';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
+import {StoreContext} from '../../store/mobx';
+import {observer} from 'mobx-react-lite';
 const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const items = useAppSelector(store => store.list.value);
-  const dispatch = useAppDispatch();
+  const {
+    list: {value: items, setList, updateList},
+  } = useContext(StoreContext);
   const {startMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
@@ -20,25 +23,23 @@ const ItemsList: FC = () => {
   const listeners = useMemo(
     () => ({
       'list:value': (value: number[]) => {
-        dispatch(
-          setList(
-            value.map(item => ({
-              backgroundColor: `rgb(${Math.floor(
-                Math.random() * 255,
-              )},${Math.floor(Math.random() * 255)},${Math.floor(
-                Math.random() * 255,
-              )})`,
-              width: item,
-            })),
-          ),
+        setList(
+          value.map(item => ({
+            backgroundColor: `rgb(${Math.floor(
+              Math.random() * 255,
+            )},${Math.floor(Math.random() * 255)},${Math.floor(
+              Math.random() * 255,
+            )})`,
+            width: item,
+          })),
         );
       },
       'list:update': (value: [number]) => {
-        dispatch(updateList(value));
+        updateList(value);
         startMark();
       },
     }),
-    [dispatch, startMark],
+    [setList, startMark, updateList],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
@@ -69,4 +70,4 @@ const ItemsList: FC = () => {
     </div>
   );
 };
-export default ItemsList;
+export default observer(ItemsList);
