@@ -1,4 +1,5 @@
-import {useEffect, useRef, useCallback} from 'react';
+import {StoreContext} from './../store/mobx/index';
+import {useEffect, useRef, useCallback, useContext} from 'react';
 import io, {Socket} from 'socket.io-client';
 import {useAppSelector, useAppDispatch} from '../hooks';
 import {stopSocket} from '../store/slices/socketSlice';
@@ -9,7 +10,9 @@ export const useSocketConnection = (props: {
   listeners: {[key: string]: (args: any) => void};
 }): StopSocketFunction => {
   const {listeners, onOpen, onClose} = props;
-  const isActive = useAppSelector(store => store.socket.isActiveConnection);
+  const {
+    socket: {isActiveConnection: isActive},
+  } = useContext(StoreContext);
   const dispatch = useAppDispatch();
   const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
