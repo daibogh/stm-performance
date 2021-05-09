@@ -1,5 +1,6 @@
 import {useLayoutEffect, useCallback} from 'react';
 type StartMarkFunction = () => void;
+type CollectPerformanceFunction = () => void;
 export const usePerformanceMeasure = ({
   startMark,
   endMark,
@@ -8,7 +9,10 @@ export const usePerformanceMeasure = ({
   startMark: string;
   endMark: string;
   measureMark: string;
-}): StartMarkFunction => {
+}): {
+  startMark: StartMarkFunction;
+  collectPerformanceList: CollectPerformanceFunction;
+} => {
   useLayoutEffect(() => {
     performance.mark(endMark);
     try {
@@ -17,5 +21,13 @@ export const usePerformanceMeasure = ({
       console.log(e);
     }
   });
-  return useCallback(() => performance.mark(startMark), [startMark]);
+  return {
+    startMark: useCallback(() => {
+      performance.mark(startMark);
+    }, [startMark]),
+    collectPerformanceList: useCallback(
+      () => performance.getEntriesByName(measureMark),
+      [measureMark],
+    ),
+  };
 };

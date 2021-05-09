@@ -7,7 +7,7 @@ import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsList: FC = () => {
   const items = useAppSelector(store => store.list.value);
   const dispatch = useAppDispatch();
-  const startMark = usePerformanceMeasure({
+  const {startMark} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',

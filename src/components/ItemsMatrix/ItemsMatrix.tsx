@@ -7,11 +7,17 @@ import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsMatrix: FC = () => {
   const matrix = useAppSelector(store => store.matrix.value);
   const dispatch = useAppDispatch();
-  const startMark = usePerformanceMeasure({
-    startMark: 'matrix:update--start',
-    endMark: 'matrix:update--end',
-    measureMark: 'matrix:re-render',
-  });
+  const measureProps = useMemo(
+    () => ({
+      startMark: 'matrix:update--start',
+      endMark: 'matrix:update--end',
+      measureMark: 'matrix:re-render',
+    }),
+    [],
+  );
+  const {startMark, collectPerformanceList} = usePerformanceMeasure(
+    measureProps,
+  );
   const onOpenSocket = useCallback((socket: Socket) => {
     socket.emit('matrix:get');
   }, []);
@@ -24,13 +30,20 @@ const ItemsMatrix: FC = () => {
         position: [number, number];
         backgroundColor: string;
       }) => {
-        dispatch(updateMatrix(value));
         startMark();
+        dispatch(updateMatrix(value));
       },
     }),
     [dispatch, startMark],
   );
-  useSocketConnection({onOpen: onOpenSocket, listeners});
+  const onCloseSocket = useCallback(() => {
+    console.log(collectPerformanceList());
+  }, [collectPerformanceList]);
+  useSocketConnection({
+    onOpen: onOpenSocket,
+    onClose: onCloseSocket,
+    listeners,
+  });
   return (
     <div>
       <div
