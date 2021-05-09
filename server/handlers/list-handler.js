@@ -3,24 +3,12 @@ module.exports = (io, socket) => {
   // обрабатываем запрос на получение сообщений
   const getList = () => {
     console.log('list:get');
-    const lst = [
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-      Math.round(Math.random() * 10),
-    ];
-
+    const lst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let idx = 0;
     const timer = setInterval(() => {
-      const rndIndex = Math.floor(Math.random() * lst.length);
-      const rndItem = Math.round(Math.random() * 10);
-      console.log([rndIndex, rndItem]);
-      socket.emit('list:update', [rndIndex, rndItem]);
+      const rndIndex = idx % lst.length;
+      idx++;
+      socket.emit('list:update', [rndIndex]);
     }, 100);
     timers[socket.roomId] = timer;
     socket.on('disconnect', () => {
