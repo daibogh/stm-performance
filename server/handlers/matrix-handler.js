@@ -17,7 +17,11 @@ module.exports = (io, socket) => {
     });
     let rowIdx = 0;
     let colIdx = 0;
+    let counter = 0;
     const timer = setInterval(() => {
+      if (counter >= 20) {
+        clearInterval(timer);
+      }
       rowIdx = Math.floor(Math.random() * mtrx.length);
       colIdx = Math.floor(Math.random() * mtrx.length);
 

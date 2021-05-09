@@ -3,11 +3,15 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {Socket} from 'socket.io-client';
 import {setList, updateList} from '../../store/slices/listSlice';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
-import {stopSocket, startSocket} from '../../store/slices/socketSlice';
-import {SocketButton} from '../SocketButton';
+import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsList: FC = () => {
   const items = useAppSelector(store => store.list.value);
   const dispatch = useAppDispatch();
+  const startMark = usePerformanceMeasure({
+    startMark: 'list:update--start',
+    endMark: 'list:update--end',
+    measureMark: 'list:re-render',
+  });
   const onOpenSocket = useCallback((socket: Socket) => {
     socket.emit('list:get');
   }, []);
@@ -29,12 +33,12 @@ const ItemsList: FC = () => {
       },
       'list:update': (value: [number]) => {
         dispatch(updateList(value));
-        performance.mark('list:update--start');
+        startMark();
       },
     }),
-    [dispatch],
+    [dispatch, startMark],
   );
-  useSocketConnection({onOpen: onOpenSocket, listeners});
+  const stopSocketFn = useSocketConnection({onOpen: onOpenSocket, listeners});
   useLayoutEffect(() => {
     performance.mark('list:update--end');
     try {
@@ -43,11 +47,13 @@ const ItemsList: FC = () => {
         'list:update--start',
         'list:update--end',
       );
-      if (items.every(elem => elem.width >= 100)) {
-        dispatch(stopSocket());
-      }
     } catch (e) {
       console.log(e);
+    }
+  });
+  useLayoutEffect(() => {
+    if (items.every(elem => elem.width >= 100)) {
+      stopSocketFn();
     }
   });
   return (
