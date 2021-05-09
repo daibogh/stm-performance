@@ -1,14 +1,18 @@
 import {Socket} from 'socket.io-client';
-import React, {FC, useCallback, useMemo, useState} from 'react';
+import React, {FC, useCallback, useContext, useMemo, useState} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
+import {StoreContext} from '../../store/mobx';
+import {observer} from 'mobx-react-lite';
 const ItemsMatrix: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const matrix = useAppSelector(store => store.matrix.value);
-  const dispatch = useAppDispatch();
+  const {
+    matrix: {value: matrix, setMatrix, update: updateMatrix},
+  } = useContext(StoreContext);
+
   const measureProps = useMemo(
     () => ({
       startMark: 'matrix:update--start',
@@ -26,17 +30,17 @@ const ItemsMatrix: FC = () => {
   const listeners = useMemo(
     () => ({
       'matrix:value': (value: {backgroundColor: string}[][]) => {
-        dispatch(setMatrix(value));
+        setMatrix(value);
       },
       'matrix:update': (value: {
         position: [number, number];
         backgroundColor: string;
       }) => {
         startMark();
-        dispatch(updateMatrix(value));
+        updateMatrix(value);
       },
     }),
-    [dispatch, startMark],
+    [setMatrix, startMark, updateMatrix],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
@@ -76,4 +80,4 @@ const ItemsMatrix: FC = () => {
   );
 };
 
-export default ItemsMatrix;
+export default observer(ItemsMatrix);
