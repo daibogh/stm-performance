@@ -12,7 +12,7 @@ const ItemsList: FC = () => {
   const {
     list: {value: items, setList, updateList},
   } = useContext(StoreContext);
-  const {startMark, collectPerformanceList} = usePerformanceMeasure({
+  const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',
@@ -35,8 +35,9 @@ const ItemsList: FC = () => {
         );
       },
       'list:update': (value: [number]) => {
-        updateList(value);
         startMark();
+        updateList(value);
+        endMark();
       },
     }),
     [setList, startMark, updateList],
