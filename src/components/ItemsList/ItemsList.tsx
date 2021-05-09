@@ -7,7 +7,7 @@ import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsList: FC = () => {
   const items = useAppSelector(store => store.list.value);
   const dispatch = useAppDispatch();
-  const {startMark} = usePerformanceMeasure({
+  const {startMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',
@@ -38,7 +38,14 @@ const ItemsList: FC = () => {
     }),
     [dispatch, startMark],
   );
-  const stopSocketFn = useSocketConnection({onOpen: onOpenSocket, listeners});
+  const onCloseSocket = useCallback(() => {
+    console.log(collectPerformanceList());
+  }, [collectPerformanceList]);
+  useSocketConnection({
+    onOpen: onOpenSocket,
+    onClose: onCloseSocket,
+    listeners,
+  });
   useLayoutEffect(() => {
     performance.mark('list:update--end');
     try {
@@ -49,11 +56,6 @@ const ItemsList: FC = () => {
       );
     } catch (e) {
       console.log(e);
-    }
-  });
-  useLayoutEffect(() => {
-    if (items.every(elem => elem.width >= 100)) {
-      stopSocketFn();
     }
   });
   return (

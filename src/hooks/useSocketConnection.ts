@@ -31,9 +31,6 @@ export const useSocketConnection = (props: {
     }
     return () => {
       socketRef.current?.disconnect();
-      if (onClose) {
-        onClose();
-      }
     };
   }, [isActive, dispatch, props.listeners, onOpen, listeners, onClose]);
   return useCallback(() => dispatch(stopSocket()), [dispatch]);
