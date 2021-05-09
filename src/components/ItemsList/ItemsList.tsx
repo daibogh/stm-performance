@@ -38,7 +38,7 @@ const ItemsList: FC = () => {
     }),
     [dispatch, startMark],
   );
-  const stopSocketFn = useSocketConnection({onOpen: onOpenSocket, listeners});
+  useSocketConnection({onOpen: onOpenSocket, listeners});
   useLayoutEffect(() => {
     performance.mark('list:update--end');
     try {
@@ -49,11 +49,6 @@ const ItemsList: FC = () => {
       );
     } catch (e) {
       console.log(e);
-    }
-  });
-  useLayoutEffect(() => {
-    if (items.every(elem => elem.width >= 100)) {
-      stopSocketFn();
     }
   });
   return (
