@@ -17,7 +17,7 @@ const ItemsMatrix: FC = () => {
     }),
     [],
   );
-  const {startMark, collectPerformanceList} = usePerformanceMeasure(
+  const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure(
     measureProps,
   );
   const onOpenSocket = useCallback((socket: Socket) => {
@@ -34,9 +34,10 @@ const ItemsMatrix: FC = () => {
       }) => {
         startMark();
         dispatch(updateMatrix(value));
+        endMark();
       },
     }),
-    [dispatch, startMark],
+    [dispatch, endMark, startMark],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
