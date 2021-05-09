@@ -1,18 +1,31 @@
 import React, {FC} from 'react';
-import {VictoryChart, VictoryLine, VictoryTheme, VictoryAxis} from 'victory';
+import {
+  VictoryChart,
+  VictoryTooltip,
+  VictoryScatter,
+  VictoryTheme,
+  VictoryAxis,
+} from 'victory';
 const PerformanceChart: FC<any> = ({data}: any) => {
   return (
     <div style={{width: 600, height: 600}}>
-      <VictoryChart theme={VictoryTheme.material}>
-        <VictoryLine
+      <VictoryChart
+        theme={VictoryTheme.material}
+        domain={{x: [0, 10000], y: [0, 1000]}}
+      >
+        <VictoryScatter
+          labelComponent={<VictoryTooltip />}
           style={{
             data: {stroke: '#c43a31'},
             parent: {border: '1px solid #ccc'},
           }}
-          data={data.map(({startTime, duration}: any) => ({
-            x: startTime,
-            y: duration,
-          }))}
+          data={data.map(
+            ({startTime, duration}: {startTime: number; duration: number}) => ({
+              x: startTime,
+              y: duration,
+              label: `duration: ${duration.toFixed(3)}ms`,
+            }),
+          )}
           // x="startTime"
           // y="duration"
         />
