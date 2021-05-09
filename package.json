@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start:client": "react-scripts start",
-    "start:server": "node server/index.js",
+    "start:server": "nodemon server/index.js",
     "dev": "concurrently \"yarn start:server\" \"yarn start:client\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@types/redux-logger": "^3.0.8",
     "concurrently": "^6.1.0",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "redux-logger": "^3.0.6"
   }

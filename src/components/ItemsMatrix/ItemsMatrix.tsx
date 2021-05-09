@@ -3,11 +3,16 @@ import {FC, useCallback, useMemo} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
+import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsMatrix: FC = () => {
   const matrix = useAppSelector(store => store.matrix.value);
   const dispatch = useAppDispatch();
+  const startMark = usePerformanceMeasure({
+    startMark: 'matrix:update--start',
+    endMark: 'matrix:update--end',
+    measureMark: 'matrix:re-render',
+  });
   const onOpenSocket = useCallback((socket: Socket) => {
-    console.log('try to emit matrix:get');
     socket.emit('matrix:get');
   }, []);
   const listeners = useMemo(
@@ -20,10 +25,10 @@ const ItemsMatrix: FC = () => {
         backgroundColor: string;
       }) => {
         dispatch(updateMatrix(value));
-        performance.mark('matrix:update--start');
+        startMark();
       },
     }),
-    [dispatch],
+    [dispatch, startMark],
   );
   useSocketConnection({onOpen: onOpenSocket, listeners});
   return (
