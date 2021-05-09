@@ -1,4 +1,11 @@
-import {FC, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import {
+  FC,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {Socket} from 'socket.io-client';
 import {setList, updateList, someLongOp} from '../../store/slices/listSlice';
@@ -39,8 +46,8 @@ const ItemsList: FC = () => {
         );
       },
       'list:update': (value: [number]) => {
-        dispatch(updateList(value));
         startMark();
+        dispatch(updateList(value));
       },
     }),
     [dispatch, startMark],
@@ -48,6 +55,7 @@ const ItemsList: FC = () => {
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
     console.log(res);
+    clearInterval(legacyCounterRef.current);
     setMeasure(res);
   }, [collectPerformanceList]);
   useSocketConnection({
