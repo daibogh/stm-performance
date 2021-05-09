@@ -9,7 +9,7 @@ const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
   const items = useAppSelector(store => store.list.value);
   const dispatch = useAppDispatch();
-  const {startMark, collectPerformanceList} = usePerformanceMeasure({
+  const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',
@@ -34,11 +34,12 @@ const ItemsList: FC = () => {
         );
       },
       'list:update': (value: [number]) => {
-        dispatch(updateList(value));
         startMark();
+        dispatch(updateList(value));
+        endMark();
       },
     }),
-    [dispatch, startMark],
+    [dispatch, endMark, startMark],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
