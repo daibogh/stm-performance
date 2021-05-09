@@ -1,10 +1,12 @@
-import {FC, useCallback, useLayoutEffect, useMemo, useRef} from 'react';
+import {FC, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {Socket} from 'socket.io-client';
 import {setList, updateList, someLongOp} from '../../store/slices/listSlice';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
+import {PerformanceChart} from '../PerformanceChart';
 const ItemsList: FC = () => {
+  const [measure, setMeasure] = useState<any>();
   const items = useAppSelector(store => store.list.value);
   const dispatch = useAppDispatch();
   const {startMark, collectPerformanceList} = usePerformanceMeasure({
@@ -44,25 +46,14 @@ const ItemsList: FC = () => {
     [dispatch, startMark],
   );
   const onCloseSocket = useCallback(() => {
-    clearInterval(legacyCounterRef.current);
-    console.log(collectPerformanceList());
+    const res = collectPerformanceList();
+    console.log(res);
+    setMeasure(res);
   }, [collectPerformanceList]);
   useSocketConnection({
     onOpen: onOpenSocket,
     onClose: onCloseSocket,
     listeners,
-  });
-  useLayoutEffect(() => {
-    performance.mark('list:update--end');
-    try {
-      performance.measure(
-        're-render',
-        'list:update--start',
-        'list:update--end',
-      );
-    } catch (e) {
-      console.log(e);
-    }
   });
   return (
     <div>
@@ -77,6 +68,9 @@ const ItemsList: FC = () => {
           />
         ))}
       </ul>
+      {measure != null && measure.length !== 0 && (
+        <PerformanceChart data={measure} />
+      )}
     </div>
   );
 };
