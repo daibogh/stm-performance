@@ -1,25 +1,31 @@
-import {FC} from 'react';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {startSocket, stopSocket} from '../../store/slices/socketSlice';
-
+import {FC, useContext} from 'react';
+import {observer} from 'mobx-react-lite';
+import {StoreContext} from '../../store/mobx';
 const SocketButton: FC = () => {
-  const isActive = useAppSelector(store => store.socket.isActiveConnection);
-  const dispatch = useAppDispatch();
+  const {
+    socket: {isActiveConnection, start, stop},
+  } = useContext(StoreContext);
   return (
     <div style={{width: 100, height: 100}}>
       <button
-        disabled={isActive}
-        style={{background: isActive ? void 0 : 'green', color: 'white'}}
+        disabled={isActiveConnection}
+        style={{
+          background: isActiveConnection ? void 0 : 'green',
+          color: 'white',
+        }}
         type="button"
-        onClick={() => dispatch(startSocket())}
+        onClick={() => start()}
       >
         start
       </button>
       <button
-        disabled={!isActive}
-        style={{background: !isActive ? void 0 : 'red', color: 'white'}}
+        disabled={!isActiveConnection}
+        style={{
+          background: !isActiveConnection ? void 0 : 'red',
+          color: 'white',
+        }}
         type="button"
-        onClick={() => dispatch(stopSocket())}
+        onClick={() => stop()}
       >
         stop
       </button>
@@ -27,4 +33,4 @@ const SocketButton: FC = () => {
   );
 };
 
-export default SocketButton;
+export default observer(SocketButton);
