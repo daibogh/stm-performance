@@ -11,7 +11,7 @@ const PerformanceChart: FC<any> = ({data}: any) => {
     <div style={{width: 600, height: 600}}>
       <VictoryChart
         theme={VictoryTheme.material}
-        domain={{x: [0, 10000], y: [0, 1000]}}
+        domain={{x: [0, 100000], y: [0, 1000]}}
       >
         <VictoryScatter
           labelComponent={<VictoryTooltip />}
