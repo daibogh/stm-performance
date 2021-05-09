@@ -7,6 +7,26 @@ import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
 import {StoreContext} from '../../store/mobx';
 import {observer} from 'mobx-react-lite';
+const Pixel = observer<{rowIdx: number; columnIdx: number}>(
+  ({rowIdx, columnIdx}) => {
+    const {
+      matrix: {
+        value: {
+          [rowIdx]: {[columnIdx]: elem},
+        },
+      },
+    } = useContext(StoreContext);
+    return (
+      <div
+        style={{
+          width: 1,
+          height: 1,
+          backgroundColor: elem.backgroundColor,
+        }}
+      ></div>
+    );
+  },
+);
 const ItemsMatrix: FC = () => {
   const [measure, setMeasure] = useState<any>();
   const {
@@ -63,13 +83,10 @@ const ItemsMatrix: FC = () => {
       >
         {matrix.map((row, rowIdx) =>
           row.map((elem, columnIdx) => (
-            <div
+            <Pixel
               key={`row=${rowIdx}-column=${columnIdx}`}
-              style={{
-                width: 1,
-                height: 1,
-                backgroundColor: elem.backgroundColor,
-              }}
+              rowIdx={rowIdx}
+              columnIdx={columnIdx}
             />
           )),
         )}
