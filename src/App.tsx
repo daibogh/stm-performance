@@ -7,7 +7,7 @@ import {SocketButton} from './components/SocketButton';
 function App() {
   return (
     <div className="App">
-      <ItemsList />
+      <ItemsMatrix />
       <SocketButton />
     </div>
   );

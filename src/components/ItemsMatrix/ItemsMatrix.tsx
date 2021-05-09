@@ -1,10 +1,12 @@
 import {Socket} from 'socket.io-client';
-import {FC, useCallback, useMemo} from 'react';
+import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
+import {PerformanceChart} from '../PerformanceChart';
 const ItemsMatrix: FC = () => {
+  const [measure, setMeasure] = useState<any>();
   const matrix = useAppSelector(store => store.matrix.value);
   const dispatch = useAppDispatch();
   const measureProps = useMemo(
@@ -37,7 +39,9 @@ const ItemsMatrix: FC = () => {
     [dispatch, startMark],
   );
   const onCloseSocket = useCallback(() => {
-    console.log(collectPerformanceList());
+    const res = collectPerformanceList();
+    console.log(res);
+    setMeasure(res);
   }, [collectPerformanceList]);
   useSocketConnection({
     onOpen: onOpenSocket,
@@ -65,6 +69,9 @@ const ItemsMatrix: FC = () => {
           )),
         )}
       </div>
+      {measure != null && measure.length !== 0 && (
+        <PerformanceChart data={measure} />
+      )}
     </div>
   );
 };
