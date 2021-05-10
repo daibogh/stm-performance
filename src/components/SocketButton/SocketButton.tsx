@@ -1,10 +1,14 @@
-import {FC, useContext} from 'react';
-import {observer} from 'mobx-react-lite';
-import {StoreContext} from '../../store/mobx';
+import {FC} from 'react';
+import {useAtom, useAction} from '@reatom/react';
+import {
+  socketAtom,
+  startSocketAction,
+  stopSocketAction,
+} from '../../store/reatom/socketAtom';
 const SocketButton: FC = () => {
-  const {
-    socket: {isActiveConnection, start, stop},
-  } = useContext(StoreContext);
+  const isActiveConnection = useAtom(socketAtom);
+  const start = useAction(startSocketAction);
+  const stop = useAction(stopSocketAction);
   return (
     <div style={{width: 100, height: 100}}>
       <button
@@ -33,4 +37,4 @@ const SocketButton: FC = () => {
   );
 };
 
-export default observer(SocketButton);
+export default SocketButton;
