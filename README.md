@@ -4,7 +4,7 @@ Written by Petr Baranov (P41081)
 
 ## Project description
 
-Repository contains implementation of performance measurements for 2 STM frameworks:
+Repository contains implementation of performance measurements for 3 STM frameworks:
 
 - redux
 - mobx
