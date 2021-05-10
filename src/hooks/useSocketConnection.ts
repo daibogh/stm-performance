@@ -7,7 +7,7 @@ export const useSocketConnection = (props: {
   onOpen?: (socket: Socket) => void;
   onClose?: () => void;
   listeners: {[key: string]: (args: any) => void};
-}): StopSocketFunction => {
+}): {stopSocket: StopSocketFunction; socket: Socket} => {
   const {listeners, onOpen, onClose} = props;
   const isActive = useAtom(socketAtom);
   const stopSocket = useAction(stopSocketAction);
@@ -36,5 +36,5 @@ export const useSocketConnection = (props: {
       }
     };
   }, [isActive, props.listeners, onOpen, listeners, onClose]);
-  return stopSocket;
+  return {stopSocket, socket: socketRef.current!};
 };

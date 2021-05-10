@@ -1,23 +1,72 @@
 import {Socket} from 'socket.io-client';
-import React, {FC, useCallback, useContext, useMemo, useState} from 'react';
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
-import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
+import {
+  EndMarkFunction,
+  StartMarkFunction,
+  usePerformanceMeasure,
+} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
 import {StoreContext} from '../../store/mobx';
 import {useAction, useAtom} from '@reatom/react';
 import {observer} from 'mobx-react-lite';
 import {
   matrixAtom,
+  pixelActions,
   setMatrixAction,
   updateMatrixAction,
 } from '../../store/reatom/matrixAtom';
+import {Atom, declareAction} from '@reatom/core';
+const Pixel: FC<{
+  atom: Atom<string>;
+  position: [number, number];
+  startMark: StartMarkFunction;
+  endMark: EndMarkFunction;
+  socket: Socket;
+}> = ({atom, socket, startMark, endMark, position: [rowIdx, columnIdx]}) => {
+  const backgroundColor = useAtom(atom);
+  const updatePixel = useAction(pixelActions[rowIdx][columnIdx]);
+  useEffect(() => {
+    socket.on(
+      'matrix:update',
+      (value: {position: [number, number]; backgroundColor: string}) => {
+        if (value.position[0] === rowIdx && value.position[1] === columnIdx) {
+          startMark();
+          updatePixel(value.backgroundColor);
+          endMark();
+        }
+      },
+    );
+  }, []);
+  return <div style={{width: 1, height: 1, backgroundColor}} />;
+};
 const ItemsMatrix: FC = () => {
   const [measure, setMeasure] = useState<any>();
   const matrix = useAtom(matrixAtom);
   const setMatrix = useAction(setMatrixAction);
   const updateMatrix = useAction(updateMatrixAction);
+  const updatePixel = useAction(
+    ({
+      position: [rowIdx, columnIdx],
+      backgroundColor,
+    }: {
+      position: [number, number];
+      backgroundColor: string;
+    }) => {
+      return declareAction<string>(`updateMatrixAction-${rowIdx}-${columnIdx}`)(
+        backgroundColor,
+      );
+    },
+  );
   const measureProps = useMemo(
     () => ({
       startMark: 'matrix:update--start',
@@ -42,18 +91,18 @@ const ItemsMatrix: FC = () => {
         backgroundColor: string;
       }) => {
         startMark();
-        updateMatrix(value);
+        updatePixel(value);
         endMark();
       },
     }),
-    [endMark, setMatrix, startMark, updateMatrix],
+    [endMark, setMatrix, startMark, updatePixel],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
     console.log(res);
     setMeasure(res);
   }, [collectPerformanceList]);
-  useSocketConnection({
+  const {socket} = useSocketConnection({
     onOpen: onOpenSocket,
     onClose: onCloseSocket,
     listeners,
@@ -67,14 +116,14 @@ const ItemsMatrix: FC = () => {
         }}
       >
         {matrix.map((row, rowIdx) =>
-          row.map((elem, columnIdx) => (
-            <div
+          row.map((atom, columnIdx) => (
+            <Pixel
+              startMark={startMark}
+              endMark={endMark}
+              socket={socket}
+              position={[rowIdx, columnIdx]}
               key={`row=${rowIdx}-column=${columnIdx}`}
-              style={{
-                width: 1,
-                height: 1,
-                backgroundColor: elem.backgroundColor,
-              }}
+              atom={atom}
             />
           )),
         )}

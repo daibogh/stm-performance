@@ -1,6 +1,6 @@
 import {useLayoutEffect, useCallback} from 'react';
-type StartMarkFunction = () => void;
-type EndMarkFunction = () => void;
+export type StartMarkFunction = () => void;
+export type EndMarkFunction = () => void;
 type CollectPerformanceFunction = () => void;
 export const usePerformanceMeasure = ({
   startMark,
