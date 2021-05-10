@@ -11,7 +11,7 @@ module.exports = (io, socket) => {
     const mtrx = new Array(length).fill(null).map((e, i) => {
       return new Array(length).fill(null).map(() => {
         return {
-          backgroundColor: genColor(),
+          backgroundColor: 'rgb(255,255,255)', //genColor(),
         };
       });
     });
