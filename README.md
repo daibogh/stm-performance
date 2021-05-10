@@ -110,14 +110,19 @@ Application (reatom) with matrix of 200x200 elements, being updated every 100ms
 
 ## Getting started
 
-To run in **dev** mode, you can open this project in terminal and type
+To run in **dev** mode, you can choose needed branch with experiment, then open this project in terminal and type
+
 for yarn users:
 
-### yarn && yarn dev
+```
+yarn && yarn dev
+```
 
 for npm:
 
-### npm i && npm run dev
+```
+npm i && npm run dev
+```
 
 open your browser and go to
 
