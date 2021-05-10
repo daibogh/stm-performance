@@ -23,23 +23,28 @@ export const matrixAtom = declareAtom<Atom<string>[][]>(
   on => [
     on(setMatrixAction, (_, payload) =>
       payload.map((row, rowIdx) =>
-        row.map((elem, columnIdx) =>
-          declareAtom(
+        row.map((elem, columnIdx) => {
+          const updateMatrixAction = declareAction<string>(
+            `updateMatrixAction-${rowIdx}-${columnIdx}`,
+          );
+          return declareAtom(
             `pixelAtom-${rowIdx}-${columnIdx}`,
-            elem.backgroundColor,
+            {value: elem.backgroundColor, updateMatrixAction},
             _on => {
-              const updateMatrixAction = declareAction<string>(
-                `updateMatrixAction-${rowIdx}-${columnIdx}`,
-              );
-              if (!!pixelActions[rowIdx]) {
-                pixelActions[rowIdx].push(updateMatrixAction);
-              } else {
-                pixelActions.push([updateMatrixAction]);
-              }
-              return [_on(updateMatrixAction, (state, payload) => payload)];
+              // if (!!pixelActions[rowIdx]) {
+              //   pixelActions[rowIdx].push(updateMatrixAction);
+              // } else {
+              //   pixelActions.push([updateMatrixAction]);
+              // }
+              return [
+                _on(updateMatrixAction, (state, payload) => ({
+                  ...state,
+                  value: payload,
+                })),
+              ];
             },
-          ),
-        ),
+          );
+        }),
       ),
     ),
   ],
