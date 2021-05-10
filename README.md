@@ -13,7 +13,7 @@ Repository contains implementation of performance measurements for 2 STM framewo
 
 ## Experiments measures
 
-There are 13 experiments (5 for redux, 8 for mobx) demonstrating performance measurements in:
+There are 21 experiments (5 for redux, 8 for mobx, 8 for reatom) demonstrating performance measurements in:
 
 1. chart (with Vitory lib)
 2. timings in performance tab (devtools)
