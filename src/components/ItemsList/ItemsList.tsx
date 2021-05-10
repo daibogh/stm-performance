@@ -1,4 +1,4 @@
-import {FC, useCallback, useMemo, useState} from 'react';
+import {FC, useCallback, useMemo, useRef, useState} from 'react';
 
 import {Socket} from 'socket.io-client';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
@@ -10,19 +10,26 @@ import {
   setListAction,
   updateListAction,
 } from '../../store/reatom/listAtom';
+import {longOpAction} from '../../store/reatom/longOpAtom';
 const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
+  const legacyCounterRef = useRef<any>(null);
   const items = useAtom(listAtom);
   const setList = useAction(setListAction);
   const updateList = useAction(updateListAction);
+  const someLongOp = useAction(longOpAction);
   const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',
   });
-  const onOpenSocket = useCallback((socket: Socket) => {
-    socket.emit('list:get');
-  }, []);
+  const onOpenSocket = useCallback(
+    (socket: Socket) => {
+      legacyCounterRef.current = setInterval(() => someLongOp(), 500);
+      socket.emit('list:get');
+    },
+    [someLongOp],
+  );
   const listeners = useMemo(
     () => ({
       'list:value': (value: number[]) => {
@@ -46,6 +53,7 @@ const ItemsList: FC = () => {
     [endMark, setList, startMark, updateList],
   );
   const onCloseSocket = useCallback(() => {
+    clearInterval(legacyCounterRef.current);
     const res = collectPerformanceList();
     console.log(res);
     setMeasure(res);
