@@ -1,18 +1,21 @@
-import {FC, useCallback, useContext, useMemo, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../../hooks';
+import {FC, useCallback, useMemo, useState} from 'react';
+
 import {Socket} from 'socket.io-client';
-import {setList, updateList} from '../../store/slices/listSlice';
 import {useSocketConnection} from '../../hooks/useSocketConnection';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
-import {StoreContext} from '../../store/mobx';
-import {observer} from 'mobx-react-lite';
+import {useAtom, useAction} from '@reatom/react';
+import {
+  listAtom,
+  setListAction,
+  updateListAction,
+} from '../../store/reatom/listAtom';
 const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const {
-    list: {value: items, setList, updateList},
-  } = useContext(StoreContext);
-  const {startMark, collectPerformanceList} = usePerformanceMeasure({
+  const items = useAtom(listAtom);
+  const setList = useAction(setListAction);
+  const updateList = useAction(updateListAction);
+  const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
     measureMark: 'list:re-render',
@@ -39,7 +42,7 @@ const ItemsList: FC = () => {
         startMark();
       },
     }),
-    [setList, startMark, updateList],
+    [endMark, setList, startMark, updateList],
   );
   const onCloseSocket = useCallback(() => {
     const res = collectPerformanceList();
@@ -70,4 +73,4 @@ const ItemsList: FC = () => {
     </div>
   );
 };
-export default observer(ItemsList);
+export default ItemsList;

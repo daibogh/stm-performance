@@ -1,8 +1,7 @@
-import {StoreContext} from './../store/mobx/index';
-import {useEffect, useRef, useCallback, useContext} from 'react';
+import {socketAtom, stopSocketAction} from './../store/reatom/socketAtom';
+import {useAtom, useAction} from '@reatom/react';
+import {useEffect, useRef} from 'react';
 import io, {Socket} from 'socket.io-client';
-import {useAppSelector, useAppDispatch} from '../hooks';
-import {stopSocket} from '../store/slices/socketSlice';
 type StopSocketFunction = () => void;
 export const useSocketConnection = (props: {
   onOpen?: (socket: Socket) => void;
@@ -10,10 +9,8 @@ export const useSocketConnection = (props: {
   listeners: {[key: string]: (args: any) => void};
 }): StopSocketFunction => {
   const {listeners, onOpen, onClose} = props;
-  const {
-    socket: {isActiveConnection: isActive},
-  } = useContext(StoreContext);
-  const dispatch = useAppDispatch();
+  const isActive = useAtom(socketAtom);
+  const stopSocket = useAction(stopSocketAction);
   const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
     if (isActive) {
@@ -38,6 +35,6 @@ export const useSocketConnection = (props: {
         onClose();
       }
     };
-  }, [isActive, dispatch, props.listeners, onOpen, listeners, onClose]);
-  return useCallback(() => dispatch(stopSocket()), [dispatch]);
+  }, [isActive, props.listeners, onOpen, listeners, onClose]);
+  return stopSocket;
 };
