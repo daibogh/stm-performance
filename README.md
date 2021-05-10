@@ -75,6 +75,38 @@ All experiments are divided by separate branches
 
     Application (mobx) with matrix of 400x400 elements and sub store for each element, being updated every 100ms
 
+14. **reatom/list**
+
+Application (reatom) with list of 10 elements, being updated every 100ms
+
+15. **reatom/list-long-op**
+
+Application (reatom) with list of 10 elements, being updated every 100ms with long operation updating state every 500ms
+
+16. **reatom/matrix**
+
+Application (reatom) with matrix of 100x100 elements, being updated every 100ms
+
+17. **reatom/matrix-200x200**
+
+Application (reatom) with matrix of 200x200 elements, being updated every 100ms
+
+18. **reatom/matrix-400x400**
+
+    Application (reatom) with matrix of 400x400 elements, being updated every 100ms
+
+19. **reatom/matrix-dynamic-atoms**
+
+    Application (reatom) with matrix of 100x100 elements and dynamic atom declaration for each element, being updated every 100ms
+
+20. **reatom/matrix-dynamic-atoms-200x200**
+
+    Application (reatom) with matrix of 200x200 elements and dynamic atom declaration for each element, being updated every 100ms
+
+21. **reatom/matrix-dynamic-atoms-400x400**
+
+    Application (reatom) with matrix of 400x400 elements and dynamic atom declaration for each element, being updated every 100ms
+
 ## Getting started
 
 To run in **dev** mode, you can open this project in terminal and type
