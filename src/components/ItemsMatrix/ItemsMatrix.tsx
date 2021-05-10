@@ -25,16 +25,16 @@ import {
   setMatrixAction,
   updateMatrixAction,
 } from '../../store/reatom/matrixAtom';
-import {Atom, declareAction} from '@reatom/core';
+import {Atom, declareAction, PayloadActionCreator} from '@reatom/core';
 const Pixel: FC<{
-  atom: Atom<string>;
+  atom: Atom<{value: string; updateMatrixAction: PayloadActionCreator<string>}>;
   position: [number, number];
   startMark: StartMarkFunction;
   endMark: EndMarkFunction;
   socket: Socket;
 }> = ({atom, socket, startMark, endMark, position: [rowIdx, columnIdx]}) => {
-  const backgroundColor = useAtom(atom);
-  const updatePixel = useAction(pixelActions[rowIdx][columnIdx]);
+  const {value: backgroundColor, updateMatrixAction} = useAtom(atom);
+  const updatePixel = useAction(updateMatrixAction);
   useEffect(() => {
     socket.on(
       'matrix:update',
