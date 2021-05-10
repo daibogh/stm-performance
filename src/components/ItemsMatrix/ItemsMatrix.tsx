@@ -6,13 +6,18 @@ import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
 import {StoreContext} from '../../store/mobx';
+import {useAction, useAtom} from '@reatom/react';
 import {observer} from 'mobx-react-lite';
+import {
+  matrixAtom,
+  setMatrixAction,
+  updateMatrixAction,
+} from '../../store/reatom/matrixAtom';
 const ItemsMatrix: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const {
-    matrix: {value: matrix, setMatrix, update: updateMatrix},
-  } = useContext(StoreContext);
-
+  const matrix = useAtom(matrixAtom);
+  const setMatrix = useAction(setMatrixAction);
+  const updateMatrix = useAction(updateMatrixAction);
   const measureProps = useMemo(
     () => ({
       startMark: 'matrix:update--start',
@@ -81,4 +86,4 @@ const ItemsMatrix: FC = () => {
   );
 };
 
-export default observer(ItemsMatrix);
+export default ItemsMatrix;

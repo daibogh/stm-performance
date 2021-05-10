@@ -1,3 +1,4 @@
+import {matrixAtom} from './matrixAtom';
 import {socketAtom} from './socketAtom';
 import {listAtom} from './listAtom';
 import {
@@ -11,6 +12,7 @@ import {
 const rootAtom = combine({
   list: listAtom,
   socket: socketAtom,
+  matrix: matrixAtom,
 });
 
 export const reatomStore = createStore(rootAtom);
