@@ -8,8 +8,9 @@ Repository contains implementation of performance measurements for 3 STM framewo
 
 - redux
 - mobx
+- reatom
   These solutions was chosen because of their popularity
-  and different approaches for state update.
+  or different approaches for state update.
 
 ## Experiments measures
 
