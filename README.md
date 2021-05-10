@@ -14,11 +14,11 @@ Repository contains implementation of performance measurements for 3 STM framewo
 
 ## Experiments measures
 
-There are 21 experiments (5 for redux, 8 for mobx, 8 for reatom) demonstrating performance measurements in:
+There are 21 experiments (5 for redux, 8 for mobx, 8 for reatom) demonstrating performance measurements (for start update and done update in store) in:
 
-1. chart (with Vitory lib)
+1. chart (with Vitory lib) (x-axis: start time; y-axis: spent time for update)
 2. timings in performance tab (devtools)
-3. console.log
+3. console.log (for debug)
 
 ## Experiments description
 
