@@ -123,6 +123,19 @@ for npm:
 ```
 npm i && npm run dev
 ```
+To run in **prod** mode, you can choose needed branch with experiment, then open this project in terminal and type
+
+for yarn users:
+
+```
+yarn && yarn prod
+```
+
+for npm:
+
+```
+npm i && npm run prod
+```
 
 open your browser and go to
 
