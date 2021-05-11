@@ -54,6 +54,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/victory": "^33.1.4",
     "concurrently": "^6.1.0",
+    "cra-bundle-analyzer": "^0.1.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "redux-logger": "^3.0.6"
