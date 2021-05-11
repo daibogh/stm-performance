@@ -17,6 +17,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-scripts": "4.0.3",
+    "serve": "^11.3.2",
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",
     "typescript": "^4.1.2",
@@ -25,8 +26,10 @@
   },
   "scripts": {
     "start:client": "react-scripts start",
+    "start:client:prod": "serve -s build",
     "start:server": "nodemon server/index.js",
     "dev": "concurrently \"yarn start:server\" \"yarn start:client\"",
+    "prod": "concurrently \"yarn build && yarn start:client:prod\" \"yarn start:server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
