@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {
   VictoryChart,
   VictoryTooltip,
@@ -11,7 +11,10 @@ const PerformanceChart: FC<any> = ({data}: any) => {
     <div style={{width: 600, height: 600}}>
       <VictoryChart
         theme={VictoryTheme.material}
-        domain={{x: [0, 100000], y: [0, 1000]}}
+        domain={{
+          x: [data[0].startTime, data[data.length - 1].startTime],
+          y: [0, data[0].duration + 1000],
+        }}
       >
         <VictoryScatter
           labelComponent={<VictoryTooltip />}
@@ -26,8 +29,6 @@ const PerformanceChart: FC<any> = ({data}: any) => {
               label: `duration: ${duration.toFixed(3)}ms`,
             }),
           )}
-          // x="startTime"
-          // y="duration"
         />
         <VictoryAxis
           label="start time (ms)"
