@@ -143,7 +143,7 @@ open your browser and go to
 
 Click on _start_ button to start experiment, click on _stop_ button to stop and collect measure.
 
-## Techinal stack
+## Technical stack
 
 Client application was developed with
 
