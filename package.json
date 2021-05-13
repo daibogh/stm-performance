@@ -27,7 +27,7 @@
   "scripts": {
     "start:client": "react-scripts start",
     "start:client:prod": "serve -s build -l 3000",
-    "start:server": "nodemon --watch server server/index.js",
+    "start:server": "node server/index.js",
     "dev": "concurrently \"yarn start:server\" \"yarn start:client\"",
     "prod": "concurrently \"yarn build && yarn start:client:prod\" \"yarn start:server\"",
     "build": "react-scripts build",
