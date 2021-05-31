@@ -1437,20 +1437,20 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
-"@reatom/core@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@reatom/core/-/core-1.1.5.tgz#ad80dc83dfabe222c840d56ae3e8571c242b4f34"
-  integrity sha512-Bi28IltJDsY6+3v+DsK6NGXRGBuB/2S7mYsRM9xvASH63IwnVF7h3B5p3egt3NGLI3UUfK8CLA65EvD577rTZg==
+"@reatom/core@^2.0.0-alpha11":
+  version "2.0.0-alpha11"
+  resolved "https://registry.yarnpkg.com/@reatom/core/-/core-2.0.0-alpha11.tgz#c8793e8a5dba8985d4a5edba052de2e6e8be9a01"
+  integrity sha512-Capwp9kjDRVBtS9adc/UKCXher4i5SQFC80sFdBxZoTMfmDsqLnlNq7cBrTYoWpbd/Nlu0oSHRhqBYOblXJyKg==
 
 "@reatom/debug@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@reatom/debug/-/debug-1.2.0.tgz#1e6d2f05b88882a47a0d59b83f88242ec3dceb55"
   integrity sha512-Obf1rI++1CKZyp1P8HY3pCCQ5GUGrYDZn8dbMaqCzvWd6kyZDFtaf51gfdnUnLwZZ8EHFYkpwgHtvbJXSv+b3w==
 
-"@reatom/react@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@reatom/react/-/react-1.1.5.tgz#6dff2cf3cdbd6d675a5d96c81fb56bb341523dd8"
-  integrity sha512-hKBWRwRPALwU3n1k7OJxACrQFdpGgayIDXbYg3KKNPvILEKncCpQDDJgoMTxOTdPaT38YHi5S6EBz9ByEx4ISg==
+"@reatom/react@^2.0.0-alpha5":
+  version "2.0.0-alpha5"
+  resolved "https://registry.yarnpkg.com/@reatom/react/-/react-2.0.0-alpha5.tgz#c0c44f32e51366d1146413d4fca88f53de68cc66"
+  integrity sha512-0kuXz4jzLKXDvKcaKEmUluIFUwWPVcLR+K3Zk/1s2Qehbic8w7rKQIuo6ifmgDho+DXhNl7XdI7EaQKB0bpbcQ==
 
 "@reduxjs/toolkit@^1.5.1":
   version "1.5.1"
@@ -11912,6 +11912,13 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-subscription@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/use-subscription/-/use-subscription-1.5.1.tgz#73501107f02fad84c6dd57965beb0b75c68c42d1"
+  integrity sha512-Xv2a1P/yReAjAbhylMfFplFKj9GssgTwN7RlcTxBujFQcloStWNDQdc4g4NRWH9xS4i/FDk04vQBptAXoF3VcA==
+  dependencies:
+    object-assign "^4.1.1"
 
 use@^3.1.0:
   version "3.1.1"

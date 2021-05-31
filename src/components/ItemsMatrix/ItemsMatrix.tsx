@@ -1,7 +1,7 @@
 import {Socket} from 'socket.io-client';
-import {FC, useCallback, useMemo} from 'react';
+import {FC, useCallback, useMemo, useContext, useEffect} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {useSocketConnection} from '../../hooks/useSocketConnection';
+import {ConnectionCtx, useSocketConnection} from '../../hooks/useSocketConnection';
 import {setMatrix, updateMatrix} from '../../store/slices/matrixSlice';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 const ItemsMatrix: FC = () => {
@@ -39,11 +39,12 @@ const ItemsMatrix: FC = () => {
   const onCloseSocket = useCallback(() => {
     console.log(collectPerformanceList());
   }, [collectPerformanceList]);
-  useSocketConnection({
-    onOpen: onOpenSocket,
-    onClose: onCloseSocket,
-    listeners,
-  });
+  const {subscribe, subscribeGates} = useContext(ConnectionCtx)
+  useEffect(() => {
+    subscribeGates({onOpen: onOpenSocket, onClose: onCloseSocket})
+    Object.entries(listeners).forEach(([event, callback]) => subscribe(event, callback))
+    
+  },[listeners, onCloseSocket, onOpenSocket, subscribe, subscribeGates]);
   return (
     <div>
       <div

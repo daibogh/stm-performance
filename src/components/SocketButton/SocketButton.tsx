@@ -1,14 +1,8 @@
-import {FC} from 'react';
-import {useAtom, useAction} from '@reatom/react';
-import {
-  socketAtom,
-  startSocketAction,
-  stopSocketAction,
-} from '../../store/reatom/socketAtom';
+import {FC, useContext} from 'react';
+
+import { ConnectionCtx } from '../../hooks/useSocketConnection';
 const SocketButton: FC = () => {
-  const isActiveConnection = useAtom(socketAtom);
-  const start = useAction(startSocketAction);
-  const stop = useAction(stopSocketAction);
+  const {isActive: isActiveConnection, startSocket: start, stopSocket: stop} = useContext(ConnectionCtx);
   return (
     <div style={{width: 100, height: 100}}>
       <button

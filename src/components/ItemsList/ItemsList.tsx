@@ -1,20 +1,15 @@
-import {FC, useCallback, useMemo, useState} from 'react';
+import {FC, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
 import {Socket} from 'socket.io-client';
-import {useSocketConnection} from '../../hooks/useSocketConnection';
+import {ConnectionCtx} from '../../hooks/useSocketConnection';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
-import {useAtom, useAction} from '@reatom/react';
-import {
-  listAtom,
-  setListAction,
-  updateListAction,
-} from '../../store/reatom/listAtom';
+import {useAtom} from '@reatom/react';
+import {listAtom} from '../../store/reatom/listAtom';
 const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const items = useAtom(listAtom);
-  const setList = useAction(setListAction);
-  const updateList = useAction(updateListAction);
+  const [items, {setList, updateList}] = useAtom(listAtom);
+
   const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
@@ -50,11 +45,13 @@ const ItemsList: FC = () => {
     console.log(res);
     setMeasure(res);
   }, [collectPerformanceList]);
-  useSocketConnection({
-    onOpen: onOpenSocket,
-    onClose: onCloseSocket,
-    listeners,
-  });
+  const {subscribe, subscribeGates} = useContext(ConnectionCtx);
+  useEffect(() => {
+    subscribeGates({onOpen: onOpenSocket, onClose: onCloseSocket});
+    Object.entries(listeners).forEach(([event, callback]) =>
+      subscribe(event, callback),
+    );
+  }, [listeners, onCloseSocket, onOpenSocket, subscribe, subscribeGates]);
   return (
     <div>
       <ul>
