@@ -3,15 +3,11 @@ import {declareAction, declareAtom} from '@reatom/core';
 export const setListAction = declareAction<
   {width: number; backgroundColor: string}[]
 >();
-export const updateListAction = declareAction<[number]>();
+export const updateListAction = declareAction<[number]>('updateListAction');
 export const listAtom = declareAtom(
-  [] as {width: number; backgroundColor: string}[],
-  {
-    setList: (payload: {width: number; backgroundColor: string}[]) => payload,
-    updateList: ([payload]: [number], state) =>
-      state.map(({width, ...elem}, idx) => ({
-        ...elem,
-        width: idx === payload ? width + 5 : width,
-      })),
+  ($, state: {width: number; backgroundColor: string}[] = []) => {
+    $(setListAction, payload => (state = payload));
+    $(updateListAction, ([payload]: [number]) => (state[payload].width += 5));
+    return state;
   },
 );

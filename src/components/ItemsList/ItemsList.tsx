@@ -4,12 +4,17 @@ import {Socket} from 'socket.io-client';
 import {ConnectionCtx} from '../../hooks/useSocketConnection';
 import {usePerformanceMeasure} from '../../hooks/usePerformanceMeasure';
 import {PerformanceChart} from '../PerformanceChart';
-import {useAtom} from '@reatom/react';
-import {listAtom} from '../../store/reatom/listAtom';
+import {useAtom, useAction} from '@reatom/react';
+import {
+  listAtom,
+  updateListAction,
+  setListAction,
+} from '../../store/reatom/listAtom';
 const ItemsList: FC = () => {
   const [measure, setMeasure] = useState<any>();
-  const [items, {setList, updateList}] = useAtom(listAtom);
-
+  const [items] = useAtom(listAtom);
+  const updateList = useAction(updateListAction);
+  const setList = useAction(setListAction);
   const {startMark, endMark, collectPerformanceList} = usePerformanceMeasure({
     startMark: 'list:update--start',
     endMark: 'list:update--end',
